@@ -1,4 +1,3 @@
-// src/app/product-list/product-list.component.ts
 import { Component, OnInit } from '@angular/core';
 import { ProductService, Product } from '../product.service';
 import { ShoppingCartService } from '../shopping-cart.service';
@@ -11,6 +10,7 @@ import { ShoppingCartService } from '../shopping-cart.service';
 export class ProductListComponent implements OnInit {
   products: Product[] = [];
   groupedProducts: Product[][] = [];
+  searchQuery: string = '';
 
   constructor(private productService: ProductService, private cartService: ShoppingCartService) { }
 
@@ -23,14 +23,13 @@ export class ProductListComponent implements OnInit {
 
   private groupProductsByCategory(products: Product[]): Product[][] {
     const groupedProducts: Product[][] = [];
-    let currentCategory: string;
+    const categoriesSet = new Set<string>();
 
     products.forEach((product) => {
-      if (product.category !== currentCategory) {
-        currentCategory = product.category;
-        groupedProducts.push([product]);
-      } else {
-        groupedProducts[groupedProducts.length - 1].push(product);
+      if (!categoriesSet.has(product.category)) {
+        categoriesSet.add(product.category);
+        const categoryProducts = products.filter(p => p.category === product.category);
+        groupedProducts.push(categoryProducts);
       }
     });
 
@@ -42,4 +41,9 @@ export class ProductListComponent implements OnInit {
     console.log('Product added to cart:', product);
   }
 
+  getFilteredProducts(): Product[] {
+    return this.products.filter(product =>
+      product.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+    );
+  }
 }
