@@ -1,0 +1,5 @@
+/* src/app/product-list/product-list.component.css */
+.highlight {
+  color: red; /* sau orice altă culoare pe care dorești să o folosești */
+  font-weight: bold; /* opțional: face textul mai evident */
+}
