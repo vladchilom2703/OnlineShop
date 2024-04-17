@@ -22,18 +22,24 @@ export class ProductListComponent implements OnInit {
   }
 
   private groupProductsByCategory(products: Product[]): Product[][] {
-    const groupedProducts: Product[][] = [];
-    const categoriesSet = new Set<string>();
+    const categoriesMap: { [category: string]: Product[] } = {};
 
+    // Initialize categoriesMap with empty arrays for each category
     products.forEach((product) => {
-      if (!categoriesSet.has(product.category)) {
-        categoriesSet.add(product.category);
-        const categoryProducts = products.filter(p => p.category === product.category);
-        groupedProducts.push(categoryProducts);
+      if (!categoriesMap[product.category]) {
+        categoriesMap[product.category] = [];
       }
     });
 
-    return groupedProducts;
+    // Populate categoriesMap with filtered products
+    products.forEach((product) => {
+      if (this.getFilteredProducts().includes(product)) {
+        categoriesMap[product.category].push(product);
+      }
+    });
+
+    // Convert categoriesMap to groupedProducts array
+    return Object.values(categoriesMap);
   }
 
   addToCart(product: Product): void {
@@ -42,8 +48,10 @@ export class ProductListComponent implements OnInit {
   }
 
   getFilteredProducts(): Product[] {
-    return this.products.filter(product =>
-      product.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+    return this.products.filter(
+      (product) =>
+        product.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        product.description.toLowerCase().includes(this.searchQuery.toLowerCase())
     );
   }
 }
