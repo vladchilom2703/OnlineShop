@@ -1,6 +1,6 @@
 <div class="container mt-3">
   <mat-form-field>
-    <input type="text" matInput [(ngModel)]="searchQuery" (input)="getFilteredProducts()" placeholder="Search for products...">
+    <input type="text" matInput [(ngModel)]="searchQuery" (input)="filterAndGroupProducts()" placeholder="Search for products...">
   </mat-form-field>
 </div>
 
@@ -10,7 +10,7 @@
       <div class="card-body">
         <h5 class="card-title">Category: {{ productGroup[0]?.category }}</h5>
         <div class="vertical-layout">
-          <div *ngFor="let product of getFilteredProducts()" class="mb-3 border p-3">
+          <div *ngFor="let product of productGroup" class="mb-3 border p-3">
             <h6 class="card-subtitle mb-2 text-muted">
               <span class="highlight">Name: {{ product.name }}</span>
             </h6>
